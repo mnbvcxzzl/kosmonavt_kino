@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Космонавт</title>
+
+  <style>
+	  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+	  @font-face {
+		font-family: "PaluiSPDemo-Bold";
+		src: url("recources/PaluiSPDemo-Bold.otf") format("opentype");
+	}
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #232323;
+      color: #fff;
+    }
+    header {
+      background: url('recources/background.png') no-repeat center center/cover;
+      height: 1080px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px;
+		padding-top: 50px;
+    }
+    header h1 {
+      font-size: 64px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: white;
+      margin-bottom: 20px;
+    }
+    header p {
+      max-width: 1100px;
+      font-size: 24px;
+      line-height: 1.3;
+	font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    }
+    section {
+      padding: 60px 40px;
+    }
+    .section-title {
+      font-size: 48px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 60px;
+		margin-top: 120px;
+		font-family: "PaluiSPDemo-Bold";
+    }
+
+    .schedule {
+      text-align: center;
+	  font-family: "Montserrat", sans-serif;
+	position: relative; width: 1700px; margin: auto;
+    }
+    .day-select {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .day-select button {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: none;
+      background: #1d1d1f;
+      color: white;
+      cursor: pointer;
+    }
+    .day-select button.active {
+      color: #977DFF;
+    }
+    .film-card {
+      display: flex;
+      align-items: center;
+      gap: 100px;
+      margin: 85px 0;
+		
+    }
+    .film-card img {
+      width: 526px;
+      height: 260px;
+      background: #444;
+    }
+    .film-info {
+      flex-grow: 1;
+      text-align: left;
+    }
+	.film-card h1 {
+		 font-size: 32px;
+		font-family: "PaluiSPDemo-Bold";
+    }
+	  .film-card p {
+		 font-size: 20px;
+		font-family: "Montserrat", sans-serif;
+    }
+    .times {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .time-btn {
+      background: #1d1d1f;
+      border-radius: 15px;
+      padding: 20px 30px;
+      cursor: pointer;
+      border: none;
+      color: white;
+      font-size: 36px;
+      transition: 0.2s;
+	  font-family: "Montserrat", sans-serif;
+    }
+    .time-btn:hover {
+      background: #6c4cd3;
+    }
+    .map {
+      margin: 40px 0;
+      height: 400px;
+      background: #222;
+    }
+    
+    /* Модальное окно */
+    .modal, .success-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+		 font-size: 24px;
+		font-family: "Montserrat", sans-serif;
+		
+    }
+    .modal-content, .success-box {
+      background: #1c1c1e;
+      padding: 30px;
+      border-radius: 20px;
+      width: 1000px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 50px;
+      cursor: pointer;
+    }
+    .buy-btn {
+      background: #6c4cd3;
+      padding: 15px 40px;
+      border-radius: 10px;
+      color: white;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 24px;
+		font-family: "Montserrat", sans-serif;
+    }
+	  footer p{
+		  max-width: 1100px;
+      font-size: 20px;
+      line-height: 1.3;
+      font-family: 'Montserrat', sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 300;
+      font-style: normal;
+      margin: auto;"
+      
+	  }
+  </style>
+</head>
+	
+<body>
+	
+<header>
+    <div style="margin-top: 20px; width: 1700px; position: relative;">
+        <div style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 20px;">
+            <p style="margin: 0;"><time id="currentTime"></time></p>
+        </div>
+        <div style="position: absolute; left: 0;"><img src="recources/logo.png"></div>
+        <div style="position: absolute; right: 0;"><img src="recources/contacts.png"></div>
+    </div>
+
+    <script>
+        var timeElement = document.getElementById('currentTime');
+        function updateTime() {
+            var currentTime = new Date();
+            timeElement.textContent = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateTime, 1000);
+        updateTime(); // Обновление при загрузке
+    </script>
+
+    <img style="margin-top: 350px;" src="recources/h1.png">
+    <p style="margin-top: 100px;">— Погрузитесь в мир кино в уютной атмосфере нашего кинотеатра. Здесь вас ждут самые горячие новинки, культовые фильмы и специальные показы. Удобный онлайн-сервис позволяет легко посмотреть расписание, выбрать лучшие места и забронировать билеты в пару кликов. Откройте для себя незабываемые кинопутешествия вместе с "Космонавтом"!</p>
+</header>
+
+  
+<!--	---------------------------------------------- НОВИНКИ ------------------------------------------------>
+	<section>
+	<style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #111; color: white; }
+        .carousel-container { position: relative; width: 1700px; margin: auto; overflow: hidden; }
+        .carousel-wrapper { display: flex; overflow: hidden; }
+        .carousel { display: flex; transition: transform 0.5s ease-in-out; }
+        .carousel-item { flex: 0 0 33.33%; box-sizing: border-box; padding: 10px; }
+        .carousel img { width: 100%; border-radius: 10px; }
+        .carousel-description { margin-top: 10px; color: #ccc;
+      		font-size: 24px;
+      		line-height: 1.3;
+			font-family: "Montserrat", sans-serif;
+    		font-optical-sizing: auto;
+    		font-weight: 300;
+    		font-style: normal;}
+        .arrow { position: absolute; top: 40%; transform: translateY(-50%); cursor: pointer;}
+        .arrow-left { left: 0px; }
+        .arrow-right { right: 0px; }
+    </style>
+	
+	<div class="section-title">Новинки</div>
+	<div class="carousel-container">
+        <div class="carousel-wrapper">
+            <div class="carousel">
+                <div class="carousel-item">
+                    <img src="recources/image.png" alt="Родина">
+                    <div class="carousel-description">«Родина»: всероссийская премьера подлинной истории великой спортсменки на пути к олимпийскому пьедесталу</div>
+                </div>
+                <div class="carousel-item">
+                    <img src="recources/image-1.png" alt="В потерянных землях">
+                    <div class="carousel-description">«В потерянных землях»: масштабное фэнтези Пола У.С. Андерсона с Миллой Йовович и Дэйвом Батиста</div>
+                </div>
+                <div class="carousel-item">
+                    <img src="recources/image-2.png" alt="Мелочи жизни">
+                    <div class="carousel-description">«Мелочи жизни»: пронзительная история с лауреатом премии «Оскар» Киллианом Мёрфи</div>
+                </div>
+                <div class="carousel-item">
+                    <img src="recources/image.png" alt="Родина">
+                    <div class="carousel-description">«Родина»: всероссийская премьера подлинной истории великой спортсменки на пути к олимпийскому пьедесталу</div>
+                </div>
+                <div class="carousel-item">
+                    <img src="recources/image-1.png" alt="В потерянных землях">
+                    <div class="carousel-description">«В потерянных землях»: масштабное фэнтези Пола У.С. Андерсона с Миллой Йовович и Дэйвом Батиста</div>
+                </div>
+            </div>
+        </div>
+
+		<div class="arrow arrow-left" onclick="prevSlide()"><img src="recources/left-arrow1.png" ></div>
+        <div class="arrow arrow-right" onclick="nextSlide()"><img src="recources/right-arrow1.png" ></div>
+    </div>
+
+     <script>
+        let currentIndex = 0;
+        const carousel = document.querySelector('.carousel');
+        const items = document.querySelectorAll('.carousel-item');
+        const totalItems = items.length;
+        const visibleItems = 3;
+
+        function updateCarousel() {
+            carousel.style.transform = `translateX(-${currentIndex * (100 / visibleItems)}%)`;
+        }
+
+        function nextSlide() {
+            if (currentIndex < totalItems - visibleItems) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = totalItems - visibleItems;
+            }
+            updateCarousel();
+        }
+    </script>
+	</section>
+
+	<!--	---------------------------------------------------РАСПИСАНИЕ-------------------------------------------------------->
+	
+	
+	<section class="schedule">
+  <div class="section-title">Расписание</div>
+  <div class="day-select">
+    <button class="active" onclick="changeDay(event, 'today')">Сегодня</button>
+    <button onclick="changeDay(event, 'tomorrow')">Завтра</button>
+    <button onclick="changeDay(event, '7feb')">7 фев</button>
+    <button onclick="changeDay(event, '8feb')">8 фев</button>
+    <button onclick="changeDay(event, '9feb')">9 фев</button>
+    <button onclick="changeDay(event, '10feb')">10 фев</button>
+    <button onclick="changeDay(event, '11feb')">11 фев</button>
+  </div>
+  
+		<!------------------------------------------------ Поле поиска ------------------------------------------------>
+  <style>
+  .search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .search-input {
+    width: 1200px;
+    padding: 15px 30px;
+    font-size: 24px;
+    border-radius: 30px;
+    border: none;
+    background: rgba(255, 255, 255, 0.25);
+    color: #171717;
+    text-align: left;
+    outline: none;
+    font-family: "Montserrat", sans-serif;
+	  margin-top: 35px;
+  }
+  .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+</style>
+
+<div class="search-container">
+  <input type="text" class="search-input" id="searchFilm" placeholder="Поиск фильма...">
+</div>
+
+<script>
+  document.getElementById('searchFilm').addEventListener('input', function () {
+    const searchQuery = this.value.toLowerCase();
+    document.querySelectorAll('.film-card').forEach(card => {
+      const title = card.querySelector('.film-info h1').textContent.toLowerCase();
+      card.style.display = title.includes(searchQuery) ? 'flex' : 'none';
+    });
+  });
+</script>
+
+		
+<!--	------------------------------------- сегодня ------------------------------------------->		
+  <div id="moviesSchedule">
+    <div class="film-card" data-day="today">
+      <img src="recources/film1.png">
+      <div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">001</p>
+        <h1 style="padding-bottom: 5px;">Дюна</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Дюна', '18:00')">18:00</button>
+          <button class="time-btn" onclick="openModal('Дюна', '20:00')">20:00</button>
+        </div>
+      </div>
+    </div>
+    
+	  <div class="film-card" data-day="today">
+      <img src="recources/film4.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">002</p>
+        <h1 style="padding-bottom: 5px;">Муфаса Король Лев</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '10:30')">10:30</button>
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '12:00')">12:00</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '15:30')">15:30</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '22:00')">22:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  <div class="film-card" data-day="today">
+      <img src="recources/film2.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">003</p>
+        <h1 style="padding-bottom: 5px;">Обезьяна</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">6.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Обезьяна', '11:30')">11:30</button>
+          <button class="time-btn" onclick="openModal('Обезьяна', '15:00')">15:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="today">
+      <img src="recources/film5.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">004</p>
+        <h1 style="padding-bottom: 5px;">Кончится лето</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.3</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Кончится лето', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Кончится лето', '21:00')">21:00</button>
+		 <button class="time-btn" onclick="openModal('Кончится лето', '22:30')">22:30</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="today">
+      <img src="recources/film3.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">005</p>
+        <h1 style="padding-bottom: 5px;">Северный полюс</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Северный полюс', '17:00')">17:00</button>
+          <button class="time-btn" onclick="openModal('Северный полюс', '19:00')">19:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="today">
+      <img src="recources/film6.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">006</p>
+        <h1 style="padding-bottom: 5px;">Красный шелк</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Красный шелк', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Красный шелк', '12:00')">12:00</button>
+		 <button class="time-btn" onclick="openModal('Красный шелк', '13:30')">13:30</button>
+        </div>
+      </div>
+    </div>
+	     </div>
+<!--	------------------------------------- завтра ------------------------------------------->  
+	    <div id="moviesSchedule">
+	  	  <div class="film-card" data-day="tomorrow">
+      <img src="recources/film4.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">001</p>
+        <h1 style="padding-bottom: 5px;">Муфаса Король Лев</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '10:30')">10:30</button>
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '12:00')">12:00</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '15:30')">15:30</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '22:00')">22:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="tomorrow">
+      <img src="recources/film5.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">002</p>
+        <h1 style="padding-bottom: 5px;">Кончится лето</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.3</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Кончится лето', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Кончится лето', '21:00')">21:00</button>
+		 <button class="time-btn" onclick="openModal('Кончится лето', '22:30')">22:30</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="tomorrow">
+      <img src="recources/film3.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">003</p>
+        <h1 style="padding-bottom: 5px;">Северный полюс</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Северный полюс', '17:00')">17:00</button>
+          <button class="time-btn" onclick="openModal('Северный полюс', '19:00')">19:00</button>
+        </div>
+      </div>
+    </div>
+			</div>
+
+<!--	------------------------------------- 7 фев -------------------------------------------> 
+	  
+		  <div id="moviesSchedule">
+    <div class="film-card" data-day="7feb">
+      <img src="recources/film1.png">
+      <div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">001</p>
+        <h1 style="padding-bottom: 5px;">Дюна</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Дюна', '18:00')">18:00</button>
+          <button class="time-btn" onclick="openModal('Дюна', '20:00')">20:00</button>
+        </div>
+      </div>
+    </div>
+			  	  <div class="film-card" data-day="7feb">
+      <img src="recources/film5.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">002</p>
+        <h1 style="padding-bottom: 5px;">Кончится лето</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.3</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Кончится лето', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Кончится лето', '21:00')">21:00</button>
+		 <button class="time-btn" onclick="openModal('Кончится лето', '22:30')">22:30</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="7feb">
+      <img src="recources/film3.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">003</p>
+        <h1 style="padding-bottom: 5px;">Северный полюс</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Северный полюс', '17:00')">17:00</button>
+          <button class="time-btn" onclick="openModal('Северный полюс', '19:00')">19:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="7feb">
+      <img src="recources/film6.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">004</p>
+        <h1 style="padding-bottom: 5px;">Красный шелк</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Красный шелк', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Красный шелк', '12:00')">12:00</button>
+		 <button class="time-btn" onclick="openModal('Красный шелк', '13:30')">13:30</button>
+        </div>
+      </div>
+    </div>
+			     </div>
+<!--	------------------------------------- 8 фев -------------------------------------------> 
+			  <div id="moviesSchedule">
+    <div class="film-card" data-day="8feb">
+      <img src="recources/film1.png">
+      <div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">001</p>
+        <h1 style="padding-bottom: 5px;">Дюна</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Дюна', '18:00')">18:00</button>
+          <button class="time-btn" onclick="openModal('Дюна', '20:00')">20:00</button>
+        </div>
+      </div>
+    </div>
+    
+	  <div class="film-card" data-day="8feb">
+      <img src="recources/film4.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">002</p>
+        <h1 style="padding-bottom: 5px;">Муфаса Король Лев</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '10:30')">10:30</button>
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '12:00')">12:00</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '15:30')">15:30</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '22:00')">22:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  <div class="film-card" data-day="8feb">
+      <img src="recources/film2.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">003</p>
+        <h1 style="padding-bottom: 5px;">Обезьяна</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">6.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Обезьяна', '11:30')">11:30</button>
+          <button class="time-btn" onclick="openModal('Обезьяна', '15:00')">15:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="8feb">
+      <img src="recources/film5.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">004</p>
+        <h1 style="padding-bottom: 5px;">Кончится лето</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.3</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Кончится лето', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Кончится лето', '21:00')">21:00</button>
+		 <button class="time-btn" onclick="openModal('Кончится лето', '22:30')">22:30</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="8feb">
+      <img src="recources/film3.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">005</p>
+        <h1 style="padding-bottom: 5px;">Северный полюс</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Северный полюс', '17:00')">17:00</button>
+          <button class="time-btn" onclick="openModal('Северный полюс', '19:00')">19:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="8feb">
+      <img src="recources/film6.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">006</p>
+        <h1 style="padding-bottom: 5px;">Красный шелк</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Красный шелк', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Красный шелк', '12:00')">12:00</button>
+		 <button class="time-btn" onclick="openModal('Красный шелк', '13:30')">13:30</button>
+        </div>
+      </div>
+    </div>
+				     </div>
+		<!--	------------------------------------- 9 фев ------------------------------------------->  
+	    <div id="moviesSchedule">
+	  	  <div class="film-card" data-day="9feb">
+      <img src="recources/film4.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">001</p>
+        <h1 style="padding-bottom: 5px;">Муфаса Король Лев</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '10:30')">10:30</button>
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '12:00')">12:00</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '15:30')">15:30</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '22:00')">22:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="9feb">
+      <img src="recources/film5.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">002</p>
+        <h1 style="padding-bottom: 5px;">Кончится лето</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.3</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Кончится лето', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Кончится лето', '21:00')">21:00</button>
+		 <button class="time-btn" onclick="openModal('Кончится лето', '22:30')">22:30</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="9feb">
+      <img src="recources/film3.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">003</p>
+        <h1 style="padding-bottom: 5px;">Северный полюс</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Северный полюс', '17:00')">17:00</button>
+          <button class="time-btn" onclick="openModal('Северный полюс', '19:00')">19:00</button>
+        </div>
+      </div>
+    </div>
+			</div>
+<!--	------------------------------------- 10 фев -------------------------------------------> 
+	  
+		  <div id="moviesSchedule">
+    <div class="film-card" data-day="10feb">
+      <img src="recources/film1.png">
+      <div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">001</p>
+        <h1 style="padding-bottom: 5px;">Дюна</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Дюна', '18:00')">18:00</button>
+          <button class="time-btn" onclick="openModal('Дюна', '20:00')">20:00</button>
+        </div>
+      </div>
+    </div>
+			  	  <div class="film-card" data-day="10feb">
+      <img src="recources/film5.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">002</p>
+        <h1 style="padding-bottom: 5px;">Кончится лето</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.3</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Кончится лето', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Кончится лето', '21:00')">21:00</button>
+		 <button class="time-btn" onclick="openModal('Кончится лето', '22:30')">22:30</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="10feb">
+      <img src="recources/film3.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">003</p>
+        <h1 style="padding-bottom: 5px;">Северный полюс</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Северный полюс', '17:00')">17:00</button>
+          <button class="time-btn" onclick="openModal('Северный полюс', '19:00')">19:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="10feb">
+      <img src="recources/film6.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">004</p>
+        <h1 style="padding-bottom: 5px;">Красный шелк</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Красный шелк', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Красный шелк', '12:00')">12:00</button>
+		 <button class="time-btn" onclick="openModal('Красный шелк', '13:30')">13:30</button>
+        </div>
+      </div>
+    </div>
+			     </div>
+		<!--	------------------------------------- 11 фев -------------------------------------------> 
+			  <div id="moviesSchedule">
+    <div class="film-card" data-day="11feb">
+      <img src="recources/film1.png">
+      <div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">001</p>
+        <h1 style="padding-bottom: 5px;">Дюна</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Дюна', '18:00')">18:00</button>
+          <button class="time-btn" onclick="openModal('Дюна', '20:00')">20:00</button>
+        </div>
+      </div>
+    </div>
+    
+	  <div class="film-card" data-day="11feb">
+      <img src="recources/film4.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">002</p>
+        <h1 style="padding-bottom: 5px;">Муфаса Король Лев</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '10:30')">10:30</button>
+          <button class="time-btn" onclick="openModal('Муфаса Король Лев', '12:00')">12:00</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '15:30')">15:30</button>
+			<button class="time-btn" onclick="openModal('Муфаса Король Лев', '22:00')">22:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  <div class="film-card" data-day="11feb">
+      <img src="recources/film2.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">003</p>
+        <h1 style="padding-bottom: 5px;">Обезьяна</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">6.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Обезьяна', '11:30')">11:30</button>
+          <button class="time-btn" onclick="openModal('Обезьяна', '15:00')">15:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="11feb">
+      <img src="recources/film5.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">004</p>
+        <h1 style="padding-bottom: 5px;">Кончится лето</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.3</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Кончится лето', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Кончится лето', '21:00')">21:00</button>
+		 <button class="time-btn" onclick="openModal('Кончится лето', '22:30')">22:30</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="11feb">
+      <img src="recources/film3.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">005</p>
+        <h1 style="padding-bottom: 5px;">Северный полюс</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.9</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Северный полюс', '17:00')">17:00</button>
+          <button class="time-btn" onclick="openModal('Северный полюс', '19:00')">19:00</button>
+        </div>
+      </div>
+    </div>
+	  
+	  	  <div class="film-card" data-day="11feb">
+      <img src="recources/film6.png">
+		<div class="film-info">
+		  <p style="padding-bottom: 55px; color: rgba(255, 255, 255, 0.5);">006</p>
+        <h1 style="padding-bottom: 5px;">Красный шелк</h1>
+		  <p style="padding-bottom: 5px;">Рейтинг Кинопоиска <font color="#977DFF">7.7</font></p>
+        <div class="times">
+          <button class="time-btn" onclick="openModal('Красный шелк', '10:00')">10:00</button>
+          <button class="time-btn" onclick="openModal('Красный шелк', '12:00')">12:00</button>
+		 <button class="time-btn" onclick="openModal('Красный шелк', '13:30')">13:30</button>
+        </div>
+      </div>
+    </div>
+				     </div>
+	</section>		  
+		
+	<style>
+  .day-select button {
+    padding: 10px 25px;
+	 margin: 0px 5px;
+    border-radius: 25px;
+    border: 1px solid white;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+	font-family: "Montserrat", sans-serif;
+	font-size: 24px;
+  }
+  .day-select button.active {
+    border-color: #977DFF;
+    box-shadow: 0 0 12px #977DFF;
+  }
+</style>
+	
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    changeDay(null, 'today'); // При загрузке показываем только фильмы с data-day="today"
+    
+    // Инициализируем поиск
+    document.getElementById('searchFilm').addEventListener('input', function() {
+      filterFilms();
+    });
+  });
+
+  function changeDay(event, day) {
+    // Меняем активную кнопку
+    if (event) {
+      document.querySelectorAll('.day-select button').forEach(button => {
+        button.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+    
+    // Сохраняем выбранный день в data-атрибут контейнера
+    document.getElementById('moviesSchedule').setAttribute('data-current-day', day);
+    
+    // Фильтруем фильмы
+    filterFilms();
+  }
+
+  function filterFilms() {
+    const searchQuery = document.getElementById('searchFilm').value.toLowerCase();
+    const currentDay = document.getElementById('moviesSchedule').getAttribute('data-current-day');
+    
+    document.querySelectorAll('.film-card').forEach(card => {
+      const title = card.querySelector('.film-info h1').textContent.toLowerCase();
+      const cardDay = card.getAttribute('data-day');
+      
+      // Показываем только если совпадает день и (есть поисковый запрос - то совпадает с ним)
+      card.style.display = (cardDay === currentDay && 
+                           (searchQuery === '' || title.includes(searchQuery))) ? 'flex' : 'none';
+    });
+  }
+</script>
+	
+	<!--	-----------------------------------------------МЕСТОПОЛОЖЕНИЕ---------------------------------------------------->
+
+<section>
+  <div class="section-title">Местоположение</div>
+  <p style="max-width: 1700px;
+      font-size: 24px;
+      line-height: 1.3;
+      font-family: 'Montserrat', sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 300;
+      font-style: normal;
+      margin: auto;">
+    Малый просп. Васильевского острова, 88, корп. 2, Санкт-Петербург
+    <br>Открыто до 02:00
+  </p>
+
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+  <script>
+    ymaps.ready(init);
+    function init() {
+      var myMap = new ymaps.Map("map", {
+        center: [59.938794, 30.213333], // Координаты Малый просп. В.О., 88, корп. 2
+        zoom: 16,
+        controls: ['zoomControl']
+      });
+
+      // Устанавливаем черно-белую карту
+      myMap.setType('yandex#map');
+      myMap.panes.get('ground').getElement().style.filter = 'grayscale(100%)';
+
+      var myPlacemark = new ymaps.Placemark(myMap.getCenter(), {}, {
+        preset: 'islands#violetDotIcon' // Фиолетовая метка
+      });
+
+      myMap.geoObjects.add(myPlacemark);
+    }
+  </script>
+
+  <!-- Контейнер карты -->
+  <div id="map" style="width: 100%; height: 400px; margin-top: 20px; margin-bottom: 200px;"></div>
+</section>
+
+  
+		<!--	-----------------------------------------------ФУТЕР---------------------------------------------------->
+	<footer style="padding-bottom: 95px; padding-top: 95px; background: #0B0B0B; ">
+   <p style="font-size: 26px; font-weight: 500; padding-bottom: 15px;">Контакты "Космонавт"</p>
+
+<p style="padding-bottom: 15px;">г. Санкт-Петербург, Малый пр-т Васильевского острова, д. 88, ТРК "Шкиперский Молл", 3 этаж</p>
+
+<p style="padding-bottom: 15px;">будни 12:00-02:00<br>
+выходные 10:00-02:00</p>
+
+<p>Реклама и сотрудничество: kosmonavt@kino.ru</p>
+    <p>© Космонавт, 2025</p>
+		
+		<div style="margin: 80px auto; width: 1700px; position: relative; display: flex;
+      flex-direction: column;
+      align-items: center;">
+        <div style="position: absolute; left: 0;"><img src="recources/logo.png"></div>
+        <div style="position: absolute; right: 0;"><img src="recources/contacts.png"></div></div>
+		
+    </footer>
+	
+	
+	<!--	-----------------------------------------------ВСПЛЫВАЮЩИЕ ОКНА---------------------------------------------------->
+	
+	<!------------------------------------------ Модальное окно выбора мест ------------------------------------------>
+<div class="modal" id="seatModal">
+  <div class="modal-content">
+    <div class="close-btn" onclick="closeModal()">&times;</div>
+    <h3 id="modalTitle" style="font-size: 32px; font-family: 'Montserrat';">Выбор мест</h3>
+    
+    <div style="display: flex; align-items: flex-start; width: 750px; padding-left: 60px; ">
+      <!-- Номера рядов -->
+      <div style="display: flex; flex-direction: column; margin-left: 100px; margin-top: 60px; height: 330px; justify-content: space-between;">
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">Ряд</div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">1</div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">2</div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">3</div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">4</div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">5</div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">6</div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">7</div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Montserrat'; font-size: 15px;">8</div>
+      </div>
+      
+      <!-- Сетка мест -->
+      <div class="seats" id="seatsGrid" style="margin: 100px auto;"></div>
+    </div>
+    
+    <img src="recources/screen0.png" style="width: 700px; padding-bottom: 80px; margin-left: 40px;">
+    <button class="buy-btn" onclick="showSuccess()">Купить билет</button>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('seatModal');
+  const seatsGrid = document.getElementById('seatsGrid');
+
+  function openModal(film, time) {
+    document.getElementById('modalTitle').innerText = `${film} — ${time}`;
+    modal.style.display = 'flex';
+    seatsGrid.innerHTML = '';
+    
+    // Создаем 8 рядов по 16 мест (всего 128 мест)
+    for (let row = 1; row <= 8; row++) {
+      for (let seatNum = 1; seatNum <= 16; seatNum++) {
+        const seat = document.createElement('div');
+        seat.className = 'seat';
+        seat.dataset.row = row;
+        seat.dataset.num = seatNum;
+        
+        // При наведении показываем номер места
+        seat.onmouseover = function() {
+          if (!this.classList.contains('selected')) {
+            this.textContent = seatNum;
+          }
+        };
+        
+        // При уходе курсора убираем номер, если место не выбрано
+        seat.onmouseout = function() {
+          if (!this.classList.contains('selected')) {
+            this.textContent = '';
+          }
+        };
+        
+        // При клике выбираем/снимаем выбор места
+        seat.onclick = function() {
+          this.classList.toggle('selected');
+          if (this.classList.contains('selected')) {
+            this.textContent = seatNum;
+          } else {
+            this.textContent = '';
+          }
+        };
+        
+        seatsGrid.appendChild(seat);
+      }
+    }
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+
+  function showSuccess() {
+    modal.style.display = 'none';
+    document.getElementById('successModal').style.display = 'flex';
+  }
+
+  function closeSuccess() {
+    document.getElementById('successModal').style.display = 'none';
+  }
+</script>
+
+<style>
+  .seats {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    gap: 7px;
+    margin: 60px 10px;
+  }
+  
+  .seat {
+    width: 30px;
+    height: 30px;
+    background: gray;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  
+  .seat.selected {
+    background: #6c4cd3;
+  }
+  
+  .seat:hover {
+    transform: scale(1.1);
+  }
+</style>
+	
+
+  <!------------------------------------------ Успешное бронирование ------------------------------------------>
+  <div class="success-modal" id="successModal">
+    <div class="success-box">
+      <div class="close-btn" onclick="closeSuccess()">&times;</div>
+      <h2 style="font-size: 24 px; font-family: 'PaluiSPDemo-Bold'; padding-bottom: 60px;">УСПЕШНОЕ<br>БРОНИРОВАНИЕ</h2>
+      <p style="padding-bottom: 60px;">Спасибо, что воспользовались нашим сервисом.<br>Приятного просмотра!</p>
+      <button class="buy-btn">Посмотреть билеты</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('seatModal');
+    const seatsGrid = document.getElementById('seatsGrid');
+
+    function openModal(film, time) {
+      document.getElementById('modalTitle').innerText = `${film} — ${time}`;
+      modal.style.display = 'flex';
+      seatsGrid.innerHTML = '';
+      for (let i = 0; i < 128; i++) {
+        const seat = document.createElement('div');
+        seat.className = 'seat';
+        seat.onclick = () => seat.classList.toggle('selected');
+        seatsGrid.appendChild(seat);
+      }
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    function showSuccess() {
+      modal.style.display = 'none';
+      document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function closeSuccess() {
+      document.getElementById('successModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
+
