@@ -128,6 +128,18 @@
       height: 400px;
       background: #222;
     }
+
+    .form-input {
+      width: 100%;
+      padding: 15px 20px;
+      margin: 10px 0;
+      border: 2px solid #2c2c2e;
+      border-radius: 12px;
+      background: #1c1c1e;
+      color: white;
+      font-size: 20px;
+      font-family: 'Montserrat', sans-serif;
+    }
     
     /* Модальное окно */
     .modal, .success-modal {
@@ -184,6 +196,10 @@
       
 	  }
   </style>
+
+  <!-- Подключаем библиотеку jsPDF для генерации PDF и поддержку шрифтов-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </head>
 	
 <body>
@@ -1011,10 +1027,22 @@
     modal.style.display = 'none';
   }
 
-  function showSuccess() {
-    modal.style.display = 'none';
-    document.getElementById('successModal').style.display = 'flex';
-  }
+  // Вместо оригинальной функции showSuccess()
+function showSuccess() {
+  closeModal(); // Закрываем окно выбора мест
+  document.getElementById('userDataModal').style.display = 'flex';
+}
+
+// Новые функции для работы с формой
+function submitUserData(e) {
+  e.preventDefault();
+  document.getElementById('userDataModal').style.display = 'none';
+  document.getElementById('successModal').style.display = 'flex';
+}
+
+function closeUserModal() {
+  document.getElementById('userDataModal').style.display = 'none';
+}
 
   function closeSuccess() {
     document.getElementById('successModal').style.display = 'none';
@@ -1054,45 +1082,132 @@
 </style>
 	
 
-  <!------------------------------------------ Успешное бронирование ------------------------------------------>
-  <div class="success-modal" id="successModal">
-    <div class="success-box">
-      <div class="close-btn" onclick="closeSuccess()">&times;</div>
-      <h2 style="font-size: 24 px; font-family: 'PaluiSPDemo-Bold'; padding-bottom: 60px;">УСПЕШНОЕ<br>БРОНИРОВАНИЕ</h2>
-      <p style="padding-bottom: 60px;">Спасибо, что воспользовались нашим сервисом.<br>Приятного просмотра!</p>
-      <button class="buy-btn">Посмотреть билеты</button>
-    </div>
+<!------------------------------------------ Успешное бронирование ------------------------------------------>
+<div class="success-modal" id="successModal">
+  <div class="success-box">
+    <div class="close-btn" onclick="closeSuccess()">&times;</div>
+    <h2 style="font-size: 24px; font-family: 'PaluiSPDemo-Bold'; padding-bottom: 60px;">УСПЕШНОЕ<br>БРОНИРОВАНИЕ</h2>
+    <p style="padding-bottom: 60px;">Спасибо, что воспользовались нашим сервисом.<br>Приятного просмотра!</p>
+    <button class="buy-btn" onclick="downloadTickets()">Скачать билеты</button>
   </div>
+</div>
 
-  <script>
-    const modal = document.getElementById('seatModal');
-    const seatsGrid = document.getElementById('seatsGrid');
+<!-- мокно ввода данных -->
+<div class="modal" id="userDataModal">
+  <div class="modal-content">
+    <div class="close-btn" onclick="closeUserModal()">&times;</div>
+    <h3 style="font-size: 32px; margin-bottom: 30px;">Ваши данные</h3>
+    <form id="userForm">
+      <input type="text" id="userName" placeholder="Имя" required class="form-input">
+      <input type="tel" id="userPhone" placeholder="Телефон" required class="form-input">
+      <input type="email" id="userEmail" placeholder="E-mail" required class="form-input">
+      <button type="button" class="buy-btn" style="margin-top: 30px;" onclick="submitUserData()">Подтвердить</button>
+    </form>
+  </div>
+</div>
 
-    function openModal(film, time) {
-      document.getElementById('modalTitle').innerText = `${film} — ${time}`;
-      modal.style.display = 'flex';
-      seatsGrid.innerHTML = '';
-      for (let i = 0; i < 128; i++) {
-        const seat = document.createElement('div');
-        seat.className = 'seat';
-        seat.onclick = () => seat.classList.toggle('selected');
-        seatsGrid.appendChild(seat);
-      }
+<script>
+  // ограничение на ввод только английск
+  document.getElementById('userName').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^A-Za-z ]/g, '');
+  });
+  
+  // валидация перед отправкой
+  function submitUserData() {
+    const nameInput = document.getElementById('userName');
+    const englishOnly = /^[A-Za-z ]+$/.test(nameInput.value);
+    
+    if (!englishOnly) {
+      alert('Please use only English letters for Name field');
+      nameInput.focus();
+      return;
     }
+    
+    userData.name = nameInput.value;
+    userData.phone = document.getElementById('userPhone').value;
+    userData.email = document.getElementById('userEmail').value;
+    
+    closeUserModal();
+    document.getElementById('successModal').style.display = 'flex';
+  }
+</script>
 
-    function closeModal() {
-      modal.style.display = 'none';
-    }
+<!-- Подключаем библиотеку jsPDF  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    function showSuccess() {
-      modal.style.display = 'none';
-      document.getElementById('successModal').style.display = 'flex';
-    }
 
-    function closeSuccess() {
-      document.getElementById('successModal').style.display = 'none';
+<script>
+  // инициализируем jsPDF
+  const { jsPDF } = window.jspdf;
+
+// глобальные переменные для хранения данных пользователя
+  let userData = {
+      name: '',
+      phone: '',
+      email: ''
+    };
+
+  function submitUserData() {
+    userData.name = document.getElementById('userName').value;
+    userData.phone = document.getElementById('userPhone').value;
+    userData.email = document.getElementById('userEmail').value;
+    
+    if (!userData.name || !userData.phone || !userData.email) {
+      alert('Пожалуйста, заполните все поля!');
+      return;
     }
-  </script>
+    
+    closeUserModal();
+    document.getElementById('successModal').style.display = 'flex';
+  }
+
+  function downloadTickets() {
+    try {
+      const doc = new jsPDF();
+
+      // заголовок
+      doc.setFontSize(20);
+      doc.setTextColor(40, 40, 40);
+      doc.text('Cinema KOSMONAVT', 105, 20, { align: 'center' });
+
+      doc.setFontSize(14);
+      doc.text('Your Tickets', 105, 30, { align: 'center' });
+      
+      // линия
+      doc.setDrawColor(150, 150, 150);
+      doc.line(20, 35, 190, 35);
+      
+      // тут данные пользователя
+      doc.setFontSize(12);
+      doc.text(`Name: ${userData.name}`, 20, 45);
+      doc.text(`Phone: ${userData.phone}`, 20, 55);
+      doc.text(`Email: ${userData.email}`, 20, 65);
+      
+      // время брони
+      const now = new Date();
+      doc.text(`Booking date: ${now.toLocaleDateString('ru-RU')}`, 20, 85);
+      
+      doc.save(`Билет_${userData.name}.pdf`);
+      closeSuccess();
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка генерации PDF. Попробуйте ещё раз.');
+    }
+  }
+
+  function closeUserModal() {
+    document.getElementById('userDataModal').style.display = 'none';
+  }
+
+  function closeSuccess() {
+    document.getElementById('successModal').style.display = 'none';
+  }
+
+  function showSuccess() {
+    document.getElementById('seatModal').style.display = 'none';
+    document.getElementById('userDataModal').style.display = 'flex';
+  }
+</script>
+
 </body>
 </html>
-
